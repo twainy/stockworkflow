@@ -92,13 +92,13 @@ cat &lt;&lt; EOB
 &lt;items&gt;
 EOB
 
-RESULT=$(curl -s "http://k-db.com/site/download.aspx?date=$date&amp;p=stockT&amp;download=csv")
+RESULT=$(curl -s "http://k-db.com/stocks/$date?download=csv")
 
 for sym in `cat "$(pwd)/symbols"`; do
     date=`date +%Y-%m-%d`
     LINE=$(echo "$RESULT"|LC_ALL=C grep "^$sym")
     SYMBL=$(echo "$LINE"|LC_ALL=C cut -d ',' -f1)
-    NAME=$(echo "$LINE"|LC_ALL=C cut -d ',' -f2| iconv -f SJIS -t UTF-8-MAC )
+    NAME=$(echo "$LINE"|LC_ALL=C cut -d ',' -f3| iconv -f SJIS -t UTF-8-MAC )
     START_PRICE=$(echo "$LINE"|LC_ALL=C cut -d ',' -f5)
     STOP_PRICE=$(echo "$LINE"|LC_ALL=C cut -d ',' -f8)
     if ! expr "$START_PRICE" : '[0-9]*' &gt; /dev/null;then
